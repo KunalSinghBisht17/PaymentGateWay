@@ -1,0 +1,308 @@
+<!-- <div style="
+  position: fixed;
+  top: 70px;
+  left: 10px;
+  z-index: 999999999;
+  background: black;
+  color: lime;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 8px;
+">
+  Modal: {{ isModalOpen }} |
+  Processing: {{ isProcessing }} |
+  Success: {{ showSuccess }}
+</div> -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+      </svg>
+      <span>Store</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">Mac</a></li>
+      <li><a href="#">iPad</a></li>
+      <li><a class="active" href="#">iPhone</a></li>
+      <li><a href="#">Watch</a></li>
+      <li><a href="#">AirPods</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon-btn" title="Search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="nav-icon-btn" title="Bag">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     HERO BANNER
+══════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">New</p>
+    <h1 class="hero-title">iPhone 17 Pro</h1>
+    <p class="hero-sub">Titanium. So strong. So light. So Pro.</p>
+    <div class="hero-actions">
+      <button class="hero-btn-primary" (click)="buyNow(product[0])">Buy Now</button>
+      <button class="hero-btn-ghost">Learn more ›</button>
+    </div>
+  </div>
+  <div class="hero-img-wrap">
+    <img src="iphone17pro.png" alt="iPhone 17 Pro" class="hero-img" />
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PRODUCT SECTION (Fully responsive grid)
+══════════════════════════════════════════════ -->
+<section class="store-section" role="region" aria-label="iPhone Products">
+
+  <div class="section-header">
+    <p class="section-eyebrow">iPhone Lineup 2025</p>
+    <h2 class="section-title">Which iPhone is right for you?</h2>
+    <p class="section-sub">Compare all models side by side.</p>
+  </div>
+
+  <!-- ── Responsive Product Grid ─────────────────────────────── -->
+  <div class="cards-grid" role="list">
+
+    <article
+      class="product-card"
+      role="listitem"
+      *ngFor="let prod of product; let i = index; trackBy: trackByProduct"
+      [attr.data-product]="prod.name"
+    >
+      <!-- Product Image -->
+      <div class="card-img-wrap">
+        <img 
+          [src]="prod.image" 
+          [alt]="prod.name + ' smartphone product photo'" 
+          class="card-img"
+          loading="lazy"
+        />
+      </div>
+
+      <!-- Product Info -->
+      <div class="card-body">
+        <h3 class="card-name">{{ prod.name }}</h3>
+        <p class="card-price-text" aria-label="Price">{{ prod.price }}</p>
+      </div>
+
+      <!-- Purchase Action -->
+      <div class="card-footer">
+        <button 
+          class="buy-btn" 
+          (click)="buyNow(prod); $event.stopPropagation()"
+          [attr.aria-label]="'Buy ' + prod.name + ' for ' + prod.price"
+          type="button"
+        >
+          <span>Buy</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </article>
+
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════════
+     FEATURE STRIP (Responsive features grid)
+══════════════════════════════════════════════ -->
+<aside class="feature-strip" role="region" aria-label="Key Features">
+  <div class="feature-item" role="listitem">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span>2-year warranty</span>
+  </div>
+  <div class="feature-item" role="listitem">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    <span>0% EMI available</span>
+  </div>
+  <div class="feature-item" role="listitem">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    <span>Free delivery</span>
+  </div>
+  <div class="feature-item" role="listitem">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+    <span>14-day returns</span>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER (Responsive, semantic)
+══════════════════════════════════════════════ -->
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">
+    <p class="footer-copy">&copy; 2025 Apple Inc. All rights reserved.</p>
+    <nav class="footer-links" role="navigation" aria-label="Footer">
+      <a href="#" rel="noopener">Privacy Policy</a>
+      <a href="#" rel="noopener">Terms of Use</a>
+      <a href="#" rel="noopener">Sales Policy</a>
+      <a href="#" rel="noopener">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+
+<!-- ══════════════════════════════════════════════
+     PAYMENT MODAL (Responsive, accessible)
+══════════════════════════════════════════════ -->
+<div 
+  class="modal-backdrop" 
+  [class.open]="isModalOpen" 
+  (click)="onBackdropClick($event)"
+>
+  <div class="modal-box" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+
+    <button 
+      class="modal-close" 
+      (click)="closeModal()"
+      type="button"
+      aria-label="Close payment modal"
+    >
+      &#x2715;
+    </button>
+
+    <!-- Product Summary -->
+    <div class="modal-product-row" *ngIf="selectedProduct">
+      <div class="modal-thumb">
+        <img 
+          [src]="selectedProduct.image" 
+          [alt]="selectedProduct.name + ' product image'" 
+          loading="lazy"
+        />
+      </div>
+      <div class="modal-product-info">
+        <p class="modal-prod-label">Purchasing</p>
+        <h2 id="modal-title" class="modal-product-name">{{ selectedProduct.name }}</h2>
+        <strong class="modal-product-price">{{ selectedProduct.price }}</strong>
+      </div>
+    </div>
+
+    <hr class="modal-divider" aria-hidden="true" />
+
+    <!-- Payment Form — Bound to service.formData (your original bindings) -->
+    <form 
+      #payForm="ngForm" 
+      (ngSubmit)="payNow()" 
+      class="payment-form"
+      novalidate
+    >
+
+      <div class="field-group">
+        <label class="field-label" for="cardOwnerName">Cardholder Name</label>
+       <input
+  id="cardOwnerName"
+  class="field-input"
+  type="text"
+  name="cardOwnerName"
+  [(ngModel)]="service.formData.cardOwnerName"
+  (input)="formatName($event)"
+  placeholder="Rahul Sharma"
+  required
+  autocomplete="cc-name"
+/>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="cardNumber">Card Number</label>
+<input
+  id="cardNumber"
+  class="field-input"
+  type="text"
+  inputmode="numeric"
+  name="cardNumber"
+  [(ngModel)]="service.formData.cardNumber"
+  (input)="formatCardNumber($event)"
+  placeholder="1234 5678 9012 3456"
+  maxlength="19"
+  required
+  autocomplete="cc-number"
+/>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="expirationDate">Expiry</label>
+         <input
+  id="expirationDate"
+  class="field-input"
+  type="text"
+  inputmode="numeric"
+  name="expirationDate"
+  [(ngModel)]="service.formData.expirationDate"
+  (input)="formatExpiryDate($event)"
+  placeholder="MM/YY"
+  maxlength="5"
+  required
+  autocomplete="cc-exp"
+/>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="securityCode">CVV</label>
+          <input
+  id="securityCode"
+  class="field-input"
+  type="password"
+  inputmode="numeric"
+  name="securityCode"
+  [(ngModel)]="service.formData.securityCode"
+  placeholder="•••"
+  maxlength="3"
+  required
+  autocomplete="cc-csc"
+  aria-describedby="cvv-help"
+/>
+          <small id="cvv-help" class="field-help-text">Last 3 digits on back of card</small>
+        </div>
+      </div>
+
+    <button
+  type="submit"
+  class="submit-btn"
+  [disabled]="isProcessing"
+>
+        <span *ngIf="!isProcessing">Pay {{ selectedProduct?.price }}</span>
+        <span *ngIf="isProcessing" class="spinner-row" aria-label="Processing payment">
+          <span class="spinner" aria-hidden="true"></span> Processing…
+        </span>
+      </button>
+
+    </form>
+
+    <p class="modal-secure-note" aria-label="Security information">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <span>Secured with 256-bit encryption</span>
+    </p>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SUCCESS OVERLAY (Premium animations)
+══════════════════════════════════════════════ -->
+<div class="success-overlay" [class.show]="showSuccess">
+  <div class="success-card">
+    <div class="success-rings">
+      <div class="success-ring r1"></div>
+      <div class="success-ring r2"></div>
+      <div class="success-ring r3"></div>
+
+      <div class="success-icon-circle">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3">
+          <polyline points="4,12 9,17 20,7"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    <h2 class="success-title">Payment Successful!</h2>
+    <p class="success-msg">{{ selectedProduct?.name }} is on its way.</p>
+    <p class="success-txn">Order confirmed.</p>
+  </div>
+</div>

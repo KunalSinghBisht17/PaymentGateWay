@@ -1,0 +1,281 @@
+/* payment-details-form.component.css
+   Modern, responsive payment form styling
+   Complements the main component CSS system
+   ═════════════════════════════════════════════════════════════════════ */
+
+:host {
+  --font:         'DM Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  --bg:           #f5f5f7;
+  --white:        #ffffff;
+  --black:        #1d1d1f;
+  --gray:         #6e6e73;
+  --gray-light:   #d2d2d7;
+  --gray-bg:      #f2f2f2;
+  --blue:         #0071e3;
+  --blue-hover:   #0077ed;
+  --blue-light:   #e8f1ff;
+  --border:       rgba(0,0,0,0.08);
+  --shadow-sm:    0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md:    0 8px 28px rgba(0,0,0,0.10);
+  --shadow-lg:    0 20px 60px rgba(0,0,0,0.14);
+  --radius-sm:    12px;
+  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ══════════════════════════════════════════════
+   PAYMENT CONTAINER
+══════════════════════════════════════════════ */
+.payment-container {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ══════════════════════════════════════════════
+   CREDIT CARD DISPLAY
+══════════════════════════════════════════════ */
+.credit-card {
+  height: clamp(180px, 40vw, 240px);
+  border-radius: clamp(16px, 4vw, 28px);
+  padding: clamp(1.5rem, 4vw, 2rem);
+  color: white;
+  background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  animation: cardSlideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes cardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) rotateX(45deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+}
+
+.credit-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.credit-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.visa-text {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-family: var(--font);
+}
+
+.chip {
+  width: clamp(40px, 8vw, 55px);
+  height: clamp(28px, 6vw, 38px);
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  border-radius: clamp(6px, 1.5vw, 10px);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+/* Flex row for header */
+.credit-card > div:first-of-type {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.card-number {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  letter-spacing: clamp(2px, 1vw, 4px);
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  animation: slideInUp 0.6s ease-out 0.15s both;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card details row */
+.credit-card > div:last-of-type {
+  display: flex;
+  justify-content: space-between;
+  font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+  margin-top: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.credit-card small {
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.credit-card div > div {
+  animation: slideInUp 0.6s ease-out 0.25s both;
+}
+
+/* ══════════════════════════════════════════════
+   FORM CARD
+══════════════════════════════════════════════ */
+.form-card {
+  border: none;
+  border-radius: clamp(16px, 4vw, 24px);
+  background: var(--white);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  animation: formSlideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+}
+
+@keyframes formSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-card .card-body {
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+.form-card h3 {
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-weight: 600;
+  margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
+  color: var(--black);
+}
+
+.form-card form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 2vw, 1rem);
+}
+
+/* ══════════════════════════════════════════════
+   FORM INPUTS
+══════════════════════════════════════════════ */
+.custom-input {
+  height: clamp(44px, 8vw, 56px);
+  border-radius: clamp(10px, 2vw, 14px);
+  padding: clamp(0.6rem, 1.5vw, 0.85rem) clamp(0.75rem, 2vw, 1rem);
+  border: 1.5px solid var(--gray-light);
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+  font-family: var(--font);
+  color: var(--black);
+  background: var(--white);
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-light);
+}
+
+.custom-input::placeholder {
+  color: #c7c7cc;
+}
+
+.form-label {
+  font-size: clamp(0.65rem, 1.2vw, 0.8rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gray);
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+/* ══════════════════════════════════════════════
+   PAYMENT BUTTON
+══════════════════════════════════════════════ */
+.payment-btn {
+  height: clamp(44px, 8vw, 56px);
+  border-radius: clamp(10px, 2vw, 14px);
+  border: none;
+  background: linear-gradient(135deg, #0071e3 0%, #0077ed 100%);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 8px 20px rgba(0, 113, 227, 0.25);
+  margin-top: clamp(0.5rem, 1.5vw, 0.75rem);
+}
+
+.payment-btn:hover {
+  background: linear-gradient(135deg, #0077ed 0%, #0082f8 100%);
+  box-shadow: 0 12px 28px rgba(0, 113, 227, 0.35);
+  transform: translateY(-2px);
+}
+
+.payment-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.25);
+}
+
+.payment-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE ADJUSTMENTS
+══════════════════════════════════════════════ */
+
+/* Mobile */
+@media (max-width: 480px) {
+  .payment-container {
+    gap: 1.25rem;
+  }
+
+  .credit-card {
+    height: 180px;
+    padding: 1.25rem;
+  }
+
+  .form-card .card-body {
+    padding: 1.5rem;
+  }
+
+  .form-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* Tablet and up */
+@media (min-width: 640px) {
+  .credit-card {
+    margin-bottom: 0.5rem;
+  }
+}
