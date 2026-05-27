@@ -11,7 +11,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<PaymentDetailContext>(Options=>Options.UseSqlServer(builder.Configuration.GetConnectionString("Devconnection")));
+//builder.Services.AddDbContext<PaymentDetailContext>(Options=>Options.UseSqlServer(builder.Configuration.GetConnectionString("Devconnection")));
+builder.Services.AddDbContext<PaymentDetailContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("Devconnection"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 10,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorNumbersToAdd: null
+        )
+    ));
 
 builder.Services.AddCors(options =>
 {
