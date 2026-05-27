@@ -18,7 +18,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngular", policy =>
         policy.WithOrigins(
                 "http://localhost:4200",  // Angular default HTTP
-                "https://localhost:4200"   // Angular with SSL
+                "https://localhost:4200",
+                "https://paymentgateway-api-kunal-c6hacsd6gvezgfen.westeurope-01.azurewebsites.net"// Angular with SSL
             )
             .AllowAnyMethod()
             .AllowAnyHeader());
