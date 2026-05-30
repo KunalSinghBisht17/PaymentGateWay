@@ -18,7 +18,16 @@ export class PaymentDetailsForm {
 
   constructor(public service: PaymentDetail, private zone: NgZone) {}
 
-  payNow() {
+  payNow(payForm?: any)
+   
+  {
+      if (payForm.invalid) {
+    Object.values(payForm.controls).forEach((control: any) => {
+      control.markAsTouched();
+    });
+    return;
+  }
+  else{
     this.isProcessing = true;
 
     this.service.postpayment().subscribe({
@@ -48,4 +57,5 @@ export class PaymentDetailsForm {
       }
     });
   }
+}
 }

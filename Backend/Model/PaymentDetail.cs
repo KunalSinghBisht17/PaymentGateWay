@@ -7,7 +7,7 @@ namespace Payment_GateWay.Model
     {
         [Key]
         //need to learn about nullable(only for refrence type)
-        public int PaymentDetailId { get; set; }
+        public int PaymentDetailId {get; set; }
         [Column(TypeName = "nvarchar(100)")]
         public string CardOwnerName { get; set; } = "";
         [Column(TypeName = "nvarchar(100)")]

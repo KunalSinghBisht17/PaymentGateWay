@@ -187,93 +187,196 @@
     <hr class="modal-divider" aria-hidden="true" />
 
     <!-- Payment Form — Bound to service.formData (your original bindings) -->
-    <form 
+    <!-- <form 
       #payForm="ngForm" 
       (ngSubmit)="payNow()" 
       class="payment-form"
       novalidate
-    >
+    > -->
 
-      <div class="field-group">
-        <label class="field-label" for="cardOwnerName">Cardholder Name</label>
-       <input
-  id="cardOwnerName"
-  class="field-input"
-  type="text"
-  name="cardOwnerName"
-  [(ngModel)]="service.formData.cardOwnerName"
-  (input)="formatName($event)"
-  placeholder="Rahul Sharma"
-  required
-  autocomplete="cc-name"
-/>
-      </div>
-
-      <div class="field-group">
-        <label class="field-label" for="cardNumber">Card Number</label>
-<input
-  id="cardNumber"
-  class="field-input"
-  type="text"
-  inputmode="numeric"
-  name="cardNumber"
-  [(ngModel)]="service.formData.cardNumber"
-  (input)="formatCardNumber($event)"
-  placeholder="1234 5678 9012 3456"
-  maxlength="19"
-  required
-  autocomplete="cc-number"
-/>
-      </div>
-
-      <div class="field-row">
-        <div class="field-group">
-          <label class="field-label" for="expirationDate">Expiry</label>
-         <input
-  id="expirationDate"
-  class="field-input"
-  type="text"
-  inputmode="numeric"
-  name="expirationDate"
-  [(ngModel)]="service.formData.expirationDate"
-  (input)="formatExpiryDate($event)"
-  placeholder="MM/YY"
-  maxlength="5"
-  required
-  autocomplete="cc-exp"
-/>
-        </div>
-        <div class="field-group">
-          <label class="field-label" for="securityCode">CVV</label>
-          <input
-  id="securityCode"
-  class="field-input"
-  type="password"
-  inputmode="numeric"
-  name="securityCode"
-  [(ngModel)]="service.formData.securityCode"
-  placeholder="•••"
-  maxlength="3"
-  required
-  autocomplete="cc-csc"
-  aria-describedby="cvv-help"
-/>
-          <small id="cvv-help" class="field-help-text">Last 3 digits on back of card</small>
-        </div>
-      </div>
-
-    <button
-  type="submit"
-  class="submit-btn"
-  [disabled]="isProcessing"
+<form 
+  #payForm="ngForm" 
+  (ngSubmit)="payNow(payForm)" 
+  class="payment-form"
+  novalidate
 >
+
+  <!-- Cardholder Name -->
+  <div class="field-group">
+    <label class="field-label" for="cardOwnerName">Cardholder Name</label>
+
+    <input
+      id="cardOwnerName"
+      class="field-input"
+      type="text"
+      name="cardOwnerName"
+      #cardOwnerName="ngModel"
+      [(ngModel)]="service.formData.cardOwnerName"
+      (input)="formatName($event)"
+      placeholder="Rahul Sharma"
+      required
+      autocomplete="cc-name"
+      [class.input-error]="cardOwnerName.invalid && (cardOwnerName.touched || payForm.submitted)"
+    />
+
+    <small 
+      class="error-text"
+      *ngIf="cardOwnerName.errors?.['required'] && (cardOwnerName.touched || payForm.submitted)"
+    >
+      Please enter cardholder name
+    </small>
+  </div>
+
+
+  <!-- Card Number -->
+  <div class="field-group">
+    <label class="field-label" for="cardNumber">Card Number</label>
+
+    <input
+      id="cardNumber"
+      class="field-input"
+      type="text"
+      inputmode="numeric"
+      name="cardNumber"
+      #cardNumber="ngModel"
+      [(ngModel)]="service.formData.cardNumber"
+      (input)="formatCardNumber($event)"
+      placeholder="1234 5678 9012 3456"
+      maxlength="19"
+      required
+      pattern="^(\d{4}\s){3}\d{4}$"
+      autocomplete="cc-number"
+      [class.input-error]="cardNumber.invalid && (cardNumber.touched || payForm.submitted)"
+    />
+
+    <small 
+      class="error-text"
+      *ngIf="cardNumber.errors?.['required'] && (cardNumber.touched || payForm.submitted)"
+    >
+      Please enter card number
+    </small>
+
+    <small 
+      class="error-text"
+      *ngIf="cardNumber.errors?.['pattern'] && (cardNumber.touched || payForm.submitted)"
+    >
+      Please enter correct 16 digit card number
+    </small>
+  </div>
+
+
+  <div class="field-row">
+
+    <!-- Expiry Date -->
+    <div class="field-group">
+      <label class="field-label" for="expirationDate">Expiry</label>
+
+      <input
+        id="expirationDate"
+        class="field-input"
+        type="text"
+        inputmode="numeric"
+        name="expirationDate"
+        #expirationDate="ngModel"
+        [(ngModel)]="service.formData.expirationDate"
+        (input)="formatExpiryDate($event)"
+        placeholder="MM/YY"
+        maxlength="5"
+        required
+        pattern="^(0[1-9]|1[0-2])\/\d{2}$"
+        autocomplete="cc-exp"
+        [class.input-error]="expirationDate.invalid && (expirationDate.touched || payForm.submitted)"
+      />
+
+      <small 
+        class="error-text"
+        *ngIf="expirationDate.errors?.['required'] && (expirationDate.touched || payForm.submitted)"
+      >
+        Please enter expiry date
+      </small>
+
+      <small 
+        class="error-text"
+        *ngIf="expirationDate.errors?.['pattern'] && (expirationDate.touched || payForm.submitted)"
+      >
+        Please enter valid expiry date in MM/YY format
+      </small>
+    </div>
+
+
+    <!-- CVV -->
+    <div class="field-group">
+      <label class="field-label" for="securityCode">CVV</label>
+
+      <input
+        id="securityCode"
+        class="field-input"
+        type="password"
+        inputmode="numeric"
+        name="securityCode"
+        #securityCode="ngModel"
+        [(ngModel)]="service.formData.securityCode"
+        (input)="formatCVV($event)"
+        placeholder="•••"
+        maxlength="3"
+        required
+        pattern="^\d{3}$"
+        autocomplete="cc-csc"
+        aria-describedby="cvv-help"
+        [class.input-error]="securityCode.invalid && (securityCode.touched || payForm.submitted)"
+      />
+
+      <small id="cvv-help" class="field-help-text">
+        Last 3 digits on back of card
+      </small>
+
+      <small 
+        class="error-text"
+        *ngIf="securityCode.errors?.['required'] && (securityCode.touched || payForm.submitted)"
+      >
+        Please enter CVV
+      </small>
+
+      <small 
+        class="error-text"
+        *ngIf="securityCode.errors?.['pattern'] && (securityCode.touched || payForm.submitted)"
+      >
+        Please enter valid 3 digit CVV
+      </small>
+    </div>
+
+  </div>
+
+
+  <!-- Main Form Error -->
+  <div class="form-error-box" *ngIf="formError">
+    {{ formError }}
+  </div>
+
+
+  <!-- Pay Button -->
+  <button
+    type="submit"
+    class="submit-btn"
+    [disabled]="isProcessing"
+  >
+    <span *ngIf="!isProcessing">Pay {{ selectedProduct?.price }}</span>
+
+    <span *ngIf="isProcessing" class="spinner-row" aria-label="Processing payment">
+      <span class="spinner" aria-hidden="true"></span> Processing…
+    </span>
+  </button>
+
+</form>
+
+    <!-- <button type="submit" class="submit-btn" [disabled]="isProcessing">
         <span *ngIf="!isProcessing">Pay {{ selectedProduct?.price }}</span>
         <span *ngIf="isProcessing" class="spinner-row" aria-label="Processing payment">
           <span class="spinner" aria-hidden="true"></span> Processing…
         </span>
-      </button>
+      </button> -->
 
-    </form>
+   
 
     <p class="modal-secure-note" aria-label="Security information">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>

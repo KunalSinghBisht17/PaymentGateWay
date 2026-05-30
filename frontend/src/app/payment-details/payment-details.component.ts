@@ -18,6 +18,8 @@ export class PaymentDetails implements OnInit {
   showSuccess = false;
   isModalOpen = false;
   isProcessing = false;
+  formError: string = '';
+  
 
   product = [
     { name: 'iPhone 17 Pro', price: '₹1,19,999', image: 'iphone17pro.png' },
@@ -52,88 +54,136 @@ export class PaymentDetails implements OnInit {
 
   trackByProduct(index: number, prod: any): string { return prod.name; }
 
-  payNow() {
+ payNow(payForm?: any) {
 
-    if (this.isProcessing) return;
+  this.formError = '';
 
-    console.log('1. Pay button clicked');
+  if (this.isProcessing) return;
 
-    this.isProcessing = true;
-    this.cdr.detectChanges();
+  const name = this.service.formData.cardOwnerName?.trim();
+  const cardNumber = this.service.formData.cardNumber?.replace(/\s/g, '');
+  const expiryDate = this.service.formData.expirationDate?.trim();
+  const cvv = this.service.formData.securityCode?.trim();
 
-    this.service.postpayment().subscribe({
-
-      next: (res) => {
-
-        console.log('2. API SUCCESS:', res);
-
-        this.zone.run(() => {
-
-          this.isProcessing = false;
-          this.isModalOpen = false;
-          this.showSuccess = true;
-
-          this.service.formData = {
-            paymentDetailId: 0,
-            cardOwnerName: '',
-            cardNumber: '',
-            expirationDate: '',
-            securityCode: ''
-          };
-
-          console.log('STATE AFTER SUCCESS:', {
-            isProcessing: this.isProcessing,
-            isModalOpen: this.isModalOpen,
-            showSuccess: this.showSuccess
-          });
-
-          this.cdr.detectChanges();
-
-          this.playChime();
-
-          this.refreshData();
-
-          setTimeout(() => {
-            this.zone.run(() => {
-              this.showSuccess = false;
-              this.cdr.detectChanges();
-            });
-          }, 5000);
-
-        });
-
-      },
-
-      error: (err) => {
-
-        console.log('3. API ERROR:', err);
-
-        this.zone.run(() => {
-
-          this.isProcessing = false;
-          this.isModalOpen = false;
-
-          this.cdr.detectChanges();
-
-          alert('Payment failed. Please try again.');
-
-        });
-
-      }
-
+  if (payForm?.controls) {
+    Object.values(payForm.controls).forEach((control: any) => {
+      control.markAsTouched();
     });
   }
-  formatCardNumber(event: any) {
-    let value = event.target.value.replace(/\D/g, '');
 
-    value = value.substring(0, 16);
-
-    value = value.replace(/(.{4})/g, '$1 ').trim();
-
-    this.service.formData.cardNumber = value;
-
-    this.cdr.detectChanges();
+  if (!name || name.length < 2) {
+    this.formError = 'Please fill the correct payment information.';
+    return;
   }
+
+  if (!cardNumber || !/^\d{16}$/.test(cardNumber)) {
+    this.formError = 'Please fill the correct payment information.';
+    return;
+  }
+
+  if (!expiryDate || !this.isValidExpiryDate(expiryDate)) {
+    this.formError = 'Please fill the correct payment information.';
+    return;
+  }
+
+  if (!cvv || !/^\d{3}$/.test(cvv)) {
+    this.formError = 'Please fill the correct payment information.';
+    return;
+  }
+
+  console.log('1. Pay button clicked');
+
+  this.isProcessing = true;
+  this.cdr.detectChanges();
+
+  this.service.postpayment().subscribe({
+
+    next: (res) => {
+
+      console.log('2. API SUCCESS:', res);
+
+      this.zone.run(() => {
+
+        this.isProcessing = false;
+        this.isModalOpen = false;
+        this.showSuccess = true;
+        this.formError = '';
+
+        this.service.formData = {
+          paymentDetailId: 0,
+          cardOwnerName: '',
+          cardNumber: '',
+          expirationDate: '',
+          securityCode: ''
+        };
+
+        console.log('STATE AFTER SUCCESS:', {
+          isProcessing: this.isProcessing,
+          isModalOpen: this.isModalOpen,
+          showSuccess: this.showSuccess
+        });
+
+        this.cdr.detectChanges();
+
+        this.playChime();
+
+        this.refreshData();
+
+        setTimeout(() => {
+          this.zone.run(() => {
+            this.showSuccess = false;
+            this.cdr.detectChanges();
+          });
+        }, 5000);
+
+      });
+
+    },
+
+    error: (err) => {
+
+      console.log('3. API ERROR:', err);
+
+      this.zone.run(() => {
+
+        this.isProcessing = false;
+        this.formError = 'Payment failed. Please try again.';
+
+        this.cdr.detectChanges();
+
+      });
+
+    }
+
+  });
+}
+isValidExpiryDate(expiry: string): boolean {
+  const expiryRegex = /^(0[1-9]|1[0-2])\/\d{2}$/;
+
+  if (!expiryRegex.test(expiry)) {
+    return false;
+  }
+
+  const [month] = expiry.split('/').map(Number);
+
+  if (month < 1 || month > 12) {
+    return false;
+  }
+
+  return true;
+}
+
+formatCardNumber(event: any) {
+  let value = event.target.value.replace(/\D/g, '');
+
+  if (value.length > 16) {
+    value = value.substring(0, 16);
+  }
+
+  value = value.replace(/(.{4})/g, '$1 ').trim();
+
+  this.service.formData.cardNumber = value;
+}
 
   formatExpiryDate(event: any) {
     let value = event.target.value.replace(/\D/g, '');
